@@ -8,7 +8,7 @@ const GlobalStateContext = createContext();
 export const GlobalStateProvider = ({ children }) => {
   const [menuBar, setMenuBar] = useState(false);
   const [hamburger, setHamburger] = useState(true);
-  const [userLoginInfo, setUserLoginInfoState] = useState<UserLoginInfo>(null);
+  const [userLoginInfo, setUserLoginInfoState] = useState(null);
 
   return (
     <GlobalStateContext.Provider
