@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import styles from "./style.module.css";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { set } from "react-hook-form";
 
 const index = () => {
+  const apiUrl = import.meta.env.VITE_REACT_API_URL;
   const [validUrl, setValidUrl] = useState(false);
+  const navigate = useNavigate();
   const params = useParams();
   useEffect(() => {
     const verifiedEmailUser = async () => {
       try {
-        const url = `http://localhost:5000/api/v1/users/${params.id}/verify/${params.token}`;
+        const url = `${apiUrl}/auth/${params.id}/verify/${params.token}`;
         const data = await axios.get(url);
         console.log(data);
         setValidUrl(true);
@@ -19,19 +21,35 @@ const index = () => {
         setValidUrl(false);
       }
     };
+    verifiedEmailUser();
+    setTimeout(() => {
+      navigate("/login");
+    }, 3000);
   }, [params]);
   return (
     <>
       {validUrl ? (
-        <div className={styles.container}>
-          <img src="/img/verify.png" alt="" className={styles.img_success} />
+        <div
+          className={styles.container}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "2rem",
+          }}
+        >
+          <div className="" style={{ width: "15vw" }}>
+            <img
+              src="/img/verify.png"
+              alt=""
+              className={styles.img_success}
+              style={{ width: "100%" }}
+            />
+          </div>
           <h1>Email verified successfuly</h1>
-          <Link to={"/login"}>
-            <button className={styles.green_btn}>Login</button>
-          </Link>
         </div>
       ) : (
-        <p>Not found</p>
+        <p style={{ color: "red" }}>Not found</p>
       )}
     </>
   );

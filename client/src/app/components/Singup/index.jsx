@@ -1,15 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
+import { Toaster, toast } from "sonner";
 
 const Signup = () => {
+  const apiUrl = import.meta.env.VITE_REACT_API_URL;
+
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState();
   const [error, setError] = useState("");
 
@@ -20,22 +24,26 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = "http://localhost:5000/api/v1/auth/signup";
+      setLoading(true);
+      const url = `${apiUrl}/auth/signup`;
       const { data: res } = await axios.post(url, data);
       setMessage(res.message);
+      setData({ firstName: "", lastName: "", email: "", password: "" });
+      toast.success(res.message);
+      setLoading(false);
     } catch (error) {
-      if (
-        error.response &&
-        error.response.status >= 400 &&
-        error.response.status <= 500
-      ) {
-        setError(error.response.data.message);
-      }
+      console.log(error.response.data.error);
+      // setError(error.response.data.error);
+      toast.error(error.response.data.error);
+      setLoading(false);
     }
   };
-
+  useEffect(() => {
+    console.log(apiUrl);
+  }, []);
   return (
     <div className={styles.signup_container}>
+      <Toaster position="top-center" />
       <div className={styles.signup_form_container}>
         <div className={styles.left}>
           <h1>Welcome Back</h1>
@@ -96,7 +104,7 @@ const Signup = () => {
             {error && <div className={styles.error_msg}>{error}</div>}
             {message && <div className={styles.success_msg}>{message}</div>}
             <button type="submit" className={styles.green_btn}>
-              Sing Up
+              {loading ? "loading...." : "Sign up"}
             </button>
           </form>
         </div>

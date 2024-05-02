@@ -19,6 +19,7 @@
     "react-redux": "^9.1.0",
     "react-router-dom": "^6.23.0",
     "react-toastify": "^10.0.5",
+    "sonner": "^1.4.41",
     "typescript": "^5.4.4"
   },
   "devDependencies": {

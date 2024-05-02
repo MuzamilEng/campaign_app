@@ -2,11 +2,14 @@ import { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import styles from "./styles.module.css";
+import { Toaster, toast } from "sonner";
 
 const Login = () => {
+  const apiUrl = import.meta.env.VITE_REACT_API_URL;
+
   const [data, setData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const handleChange = ({ currentTarget: input }) => {
     setData({ ...data, [input.name]: input.value });
   };
@@ -14,23 +17,27 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = "http://localhost:5000/api/v1/auth/login";
+      setLoading(true);
+      const url = `${apiUrl}/auth/login`;
       const { data: res } = await axios.post(url, data);
+
       localStorage.setItem("token", res.data);
+      setLoading(false);
       window.location = "/";
+      toast.success("Login Successful");
     } catch (error) {
-      if (
-        error.response &&
-        error.response.status >= 400 &&
-        error.response.status <= 500
-      ) {
-        setError(error.response.data.message);
-      }
+      setLoading(false);
+      console.log(error.response.data.error);
+      // setError(error.response.data.error);
+      toast.error(error.response.data.error);
+      setLoading(false);
     }
   };
 
   return (
     <div className={styles.login_container}>
+      <Toaster position="top-center" />
+
       <div className={styles.login_form_container}>
         <div className={styles.left}>
           <form className={styles.form_container} onSubmit={handleSubmit}>
@@ -53,9 +60,11 @@ const Login = () => {
               required
               className={styles.input}
             />
+            <Link to={"/forgetPassword"}>Forget password</Link>
+
             {error && <div className={styles.error_msg}>{error}</div>}
             <button type="submit" className={styles.green_btn}>
-              Sing In
+              {loading ? "Loading..." : "Sign in"}
             </button>
           </form>
         </div>
