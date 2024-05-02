@@ -10,8 +10,8 @@ const Signup = () => {
     email: "",
     password: "",
   });
+  const [message, setMessage] = useState();
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   const handleChange = ({ currentTarget: input }) => {
     setData({ ...data, [input.name]: input.value });
@@ -22,8 +22,7 @@ const Signup = () => {
     try {
       const url = "http://localhost:5000/api/v1/auth/signup";
       const { data: res } = await axios.post(url, data);
-      navigate("/login");
-      console.log(res.message);
+      setMessage(res.message);
     } catch (error) {
       if (
         error.response &&
@@ -95,6 +94,7 @@ const Signup = () => {
               className={styles.input}
             />
             {error && <div className={styles.error_msg}>{error}</div>}
+            {message && <div className={styles.success_msg}>{message}</div>}
             <button type="submit" className={styles.green_btn}>
               Sing Up
             </button>
