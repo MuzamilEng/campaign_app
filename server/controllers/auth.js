@@ -3,6 +3,9 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { authenticateJWT } = require("../middleware/authMiddleware");
 const passport = require("passport");
+const crypto = require("crypto");
+const Token = require("../models/token");
+const sendMail = require("./sendMail")
 const cloudinary = require("../cloudinary.config");
 
 const signUp = async (req, res) => {
@@ -40,12 +43,36 @@ const signUp = async (req, res) => {
     });
 
     const savedUser = await newUser.save();
+
+    const token  = await new Token({
+      userId: savedUser._id,
+      token: crypto.randomBytes(32).toString("hex"),
+    }).save();
+    const url = `${process.env.BASE_URL}/users/${savedUser._id}/verify/${token.token}`;
+    await sendMail(savedUser.email, "Verify your account", url);
+
+    if (!savedUser.verified) {
+			let token = await Token.findOne({ userId: savedUser._id });
+			if (!token) {
+				token = await new Token({
+					userId: savedUser._id,
+					token: crypto.randomBytes(32).toString("hex"),
+				}).save();
+				const url = `${process.env.BASE_URL}users/${savedUser.id}/verify/${token.token}`;
+				await sendMail(savedUser.email, "Verify Email", url);
+			}
+      console.log(savedUser.email, "email");
+
+			return res
+				.status(400)
+				.send({ message: "An Email sent to your account please verify" });
+		}
+
     res.status(201).json({
       success: true,
       user: savedUser,
     });
   } catch (error) {
-    console.log(error, "error aa");
     res.status(500).json({ error: error.message });
   }
 };
