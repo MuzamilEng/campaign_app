@@ -3,6 +3,8 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const {signUp, login, getUserDetails, allUsers} = require('../controllers/auth');
+const User = require('../models/User');
+const Token = require('../models/token');
 const storage = multer.diskStorage({
     // destination: ('./public/uploads/'),
     filename: (req, file, cb) => {
@@ -24,5 +26,25 @@ router.route('/signup').post(uploadFiles,signUp);
 router.route('/login').post(login);
 router.route('/getDetails').get(getUserDetails);
 router.route('/getAllUsers').get( allUsers);
+
+router.get("/:id/verify/:token/", async (req, res) => {
+	try {
+		const user = await User.findOne({ _id: req.params.id });
+		if (!user) return res.status(400).send({ message: "Invalid link" });
+
+		const token = await Token.findOne({
+			userId: user._id,
+			token: req.params.token,
+		});
+		if (!token) return res.status(400).send({ message: "Invalid link" });
+
+		await User.updateOne({ _id: user._id, verified: true });
+		await token.remove();
+
+		res.status(200).send({ message: "Email verified successfully" });
+	} catch (error) {
+		res.status(500).send({ message: "Internal Server Error" });
+	}
+});
 
 module.exports = router
