@@ -45,6 +45,7 @@ passport.use(
   new JwtStrategy(jwtOptions, async (payload, done) => {
     try {
       const user = await User.findById(payload.id);
+      console.log(user, "user");
 
       if (!user) {
         return done(null, false);
@@ -63,6 +64,7 @@ const authenticateJWT = (req, res, next) => {
     if (err) {
       return res.status(500).json({ error: "Internal Server Error" });
     }
+    console.log(user, "user");
 
     if (!user) {
       return res.status(401).json({ error: "Unauthorized" });
@@ -73,6 +75,4 @@ const authenticateJWT = (req, res, next) => {
   })(req, res, next);
 };
 
-module.exports = {
-  authenticateJWT,
-};
+module.exports = { authenticateJWT };

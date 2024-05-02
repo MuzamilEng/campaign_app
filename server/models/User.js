@@ -19,9 +19,6 @@ const userSchema = new mongoose.Schema({
   image:{
     type: String
   },
-  category:{
-    type: String
-  }
 }, 
 {
   timestamps: true

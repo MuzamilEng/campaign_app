@@ -1,15 +1,14 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const Tradesmen = require("../models/Tradesmen");
 const { authenticateJWT } = require("../middleware/authMiddleware");
 const passport = require("passport");
 const cloudinary = require("../cloudinary.config");
 
 const signUp = async (req, res) => {
   try {
-    const { firstName, lastName, category, password, email, phoneNumber } =
-      req.body;
+    const { firstName, lastName, password, email, phoneNumber } = req.body;
+
     let mainImageURL;
     // Check if the email is already taken
     const existingUser = await User.findOne({ email });
@@ -34,7 +33,6 @@ const signUp = async (req, res) => {
     const newUser = new User({
       firstName,
       lastName,
-      category,
       password: hashedPassword,
       email,
       phoneNumber,
@@ -75,19 +73,9 @@ const login = (req, res, next) => {
           }
         );
 
-        // Find the associated tradesman profile using the user's ID
-        const tradesmanProfile = await Tradesmen.findOne({ user: user._id });
-        console.log(tradesmanProfile, "profile here");
-
-        // If a tradesman profile is found, populate it
-        if (tradesmanProfile) {
-          await tradesmanProfile.populate("user").execPopulate();
-        }
-
-        // Send the token, user details, and tradesman profile (if available) in the response
-        return res.json({ token, user, tradesmanProfile });
+        return res.json({ token, user });
       } catch (error) {
-        console.error("Error retrieving tradesman profile:", error);
+        console.error("Error retrieving profile:", error);
         return res.status(500).json({ error: "Internal Server Error" });
       }
     }
@@ -96,20 +84,9 @@ const login = (req, res, next) => {
 
 const getUserDetails = (req, res) => {
   console.log(req.body, "token here");
-  // Use the authenticateJWT middleware before processing the request
   authenticateJWT(req, res, async () => {
-    // Access the authenticated user through req.user
     const user = req.user;
-
-    // Send user details in the response
-    return res.json({
-      id: user?._id,
-      username: user?.firstName,
-      email: user?.email,
-      phoneNumber: user?.phoneNumber,
-      category: user?.category,
-      image: user?.image,
-    });
+    return res.json(user);
   });
 };
 
