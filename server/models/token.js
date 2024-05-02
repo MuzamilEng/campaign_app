@@ -9,7 +9,15 @@ const tokenSchema = new Schema({
 		unique: true,
 	},
 	token: { type: String, required: true },
-	createdAt: { type: Date, default: Date.now, expires: 3600 },
+    otp: {
+        type: String,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        expires: 3600, // Automatically delete document after 1 hour
+    },
+
 });
 
 module.exports = mongoose.model("token", tokenSchema);

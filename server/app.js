@@ -6,6 +6,8 @@ const notFound = require("./middleware/not-found");
 const cors = require("cors");
 const auth = require("./routes/auth");
 const profileRoute = require("./routes/profileRoute");
+const passwordRoute = require("./routes/password");
+
 const path = require("path");
 
 const port = process.env.PORT || 5000;
@@ -26,7 +28,8 @@ app.use(
 // Routes
 
 
-app.use("/api/v1/auth", auth);
+app.use("/api/v1/auth", auth); 
+app.use("/api/v1/", passwordRoute);
 app.use("/api/v1/profile", profileRoute);
 
 app.use(errorHandler);
