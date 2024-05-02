@@ -3,10 +3,11 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
 import { Toaster, toast } from "sonner";
+import { useGlobalContext } from "../../context/GlobalStateProvider";
 
 const Login = () => {
   const apiUrl = import.meta.env.VITE_REACT_API_URL;
-
+  const { object, setObject } = useGlobalContext();
   const [data, setData] = useState({ email: "" });
   const navigate = useNavigate();
   const [error, setError] = useState("");
@@ -18,6 +19,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setObject({ ...object, email: data.email });
       setLoading(true);
       const url = `${apiUrl}/forgot-password`;
       const res = await axios.post(url, data);

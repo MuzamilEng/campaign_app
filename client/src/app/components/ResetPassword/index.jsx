@@ -3,10 +3,11 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import styles from "./styles.module.css";
 import { Toaster, toast } from "sonner";
+import { useGlobalContext } from "../../context/GlobalStateProvider";
 
 const Login = () => {
   const apiUrl = import.meta.env.VITE_REACT_API_URL;
-
+  const { object, setObject } = useGlobalContext();
   //   const [data, setData] = useState({ email: "" });
   const [data, setData] = useState({ email: "", otp: "", newPassword: "" });
   const [error, setError] = useState("");
@@ -21,9 +22,9 @@ const Login = () => {
     e.preventDefault();
     try {
       setLoading(true);
-
+      setObject({ ...object, newPassword: data.newPassword, otp: data.otp });
       const url = `${apiUrl}/reset-password`;
-      const res = await axios.post(url, data);
+      const res = await axios.post(url, object);
       setData({ email: "", otp: "", newPassword: "" });
       setLoading(false);
       setSuccessFulAlert(true);
