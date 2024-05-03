@@ -7,7 +7,7 @@ const cors = require("cors");
 const auth = require("./routes/auth");
 const profileRoute = require("./routes/profileRoute");
 const passwordRoute = require("./routes/password");
-
+const uploadCsv = require("./routes/uploadCsv");
 const path = require("path");
 
 const port = process.env.PORT || 5000;
@@ -24,14 +24,14 @@ app.use(express.json({ limit: "50mb", extended: true }));
 app.use(
   express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 })
 );
+app.use(express.static("public"));
 
 // Routes
 
-
-app.use("/api/v1/auth", auth); 
+app.use("/api/v1/auth", auth);
 app.use("/api/v1/", passwordRoute);
 app.use("/api/v1/profile", profileRoute);
-
+app.use("/api/v1/", uploadCsv);
 app.use(errorHandler);
 app.use(notFound);
 

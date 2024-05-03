@@ -6,7 +6,8 @@ const passport = require("passport");
 const crypto = require("crypto");
 const Token = require("../models/token");
 const sendMail = require("./sendMail");
-const cloudinary = require("../cloudinary.config");
+const uploadOnCloudinary = require("../utils/cloudinary");
+// const cloudinary = require("../cloudinary.config");
 
 const signUp = async (req, res) => {
   try {
@@ -21,10 +22,11 @@ const signUp = async (req, res) => {
     if (req.file) {
       const mainImage = req.file;
       console.log(mainImage, "mainImage", "file");
-      const mainImageResult = await cloudinary.uploader.upload(mainImage.path, {
-        folder: "Assets",
-      });
-      mainImageURL = mainImageResult.secure_url;
+      // const mainImageResult = await cloudinary.uploader.upload(mainImage.path, {
+      //   folder: "Assets",
+      // });
+      const mainImageURL = await uploadOnCloudinary(mainImage.path);
+      mainImageURL = mainImageURL.secure_url;
       // console.log(mainImageURL, "mainImageURL");
     }
 

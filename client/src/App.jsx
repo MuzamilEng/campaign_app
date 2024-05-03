@@ -1,10 +1,11 @@
 import { Route, Routes, Navigate } from "react-router-dom";
-import Main from "./app/components/Main";
-import Signup from "./app/components/Singup";
-import Login from "./app/components/Login";
-import Emailverify from "./app/components/Emailverify";
-import ForgetPassword from "./app/components/ForgetPassword";
-import ResetPassword from "./app/components/ResetPassword";
+import Main from "./app/pages/Main";
+import Signup from "./app/pages/Singup";
+import Login from "./app/pages/Login";
+import Emailverify from "./app/pages/Emailverify";
+import ForgetPassword from "./app/pages/ForgetPassword";
+import ResetPassword from "./app/pages/ResetPassword";
+import Dashboard from "./app/pages/Dashboard";
 function App() {
   const user = localStorage.getItem("token");
 
@@ -17,6 +18,7 @@ function App() {
       <Route path="/users/:id/verify/:token" element={<Emailverify />} />
       <Route path="/forgetPassword" element={<ForgetPassword />} />
       <Route path="/resetPassword" element={<ResetPassword />} />
+      <Route path="/dashboard" element={<Dashboard />} />
     </Routes>
   );
 }
