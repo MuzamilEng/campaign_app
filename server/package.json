@@ -16,11 +16,14 @@
     "cloudinary": "^1.41.3",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
+    "csv-parser": "^3.0.0",
+    "csvtojson": "^2.0.10",
     "dotenv": "^8.2.0",
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
     "express-async-handler": "^1.2.0",
     "ftp": "^0.3.10",
+    "image-size": "^1.1.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^5.13.20",
     "multer": "^1.4.5-lts.1",
@@ -29,7 +32,8 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "socket.io": "^4.7.2",
-    "stripe": "^14.16.0"
+    "stripe": "^14.16.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"

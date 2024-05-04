@@ -6,6 +6,8 @@ import Emailverify from "./app/pages/Emailverify";
 import ForgetPassword from "./app/pages/ForgetPassword";
 import ResetPassword from "./app/pages/ResetPassword";
 import Dashboard from "./app/pages/Dashboard";
+import UserTable from "./app/pages/UserTable";
+import AdminTable from "./app/pages/AdminTable";
 function App() {
   const user = localStorage.getItem("token");
 
@@ -19,6 +21,8 @@ function App() {
       <Route path="/forgetPassword" element={<ForgetPassword />} />
       <Route path="/resetPassword" element={<ResetPassword />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/userTable" element={<UserTable />} />
+      <Route path="/adminTable" element={<AdminTable />} />
     </Routes>
   );
 }

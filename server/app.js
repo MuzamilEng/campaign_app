@@ -1,15 +1,16 @@
 const express = require("express");
 const app = express();
 const connectDB = require("./db/connect");
-const errorHandler = require("./middleware/error-handler");
+
 const notFound = require("./middleware/not-found");
 const cors = require("cors");
 const auth = require("./routes/auth");
 const profileRoute = require("./routes/profileRoute");
 const passwordRoute = require("./routes/password");
 const uploadCsv = require("./routes/uploadCsv");
+const adminRoute = require("./routes/adminRoutes");
 const path = require("path");
-
+const errorHandler = require("./middleware/error-handler");
 const port = process.env.PORT || 5000;
 require("dotenv").config({ path: ".env" });
 
@@ -32,7 +33,7 @@ app.use("/api/v1/auth", auth);
 app.use("/api/v1/", passwordRoute);
 app.use("/api/v1/profile", profileRoute);
 app.use("/api/v1/", uploadCsv);
-app.use(errorHandler);
+app.use("/api/v1/", adminRoute);
 app.use(notFound);
 
 app.use(express.static(path.resolve(__dirname, "../client/build")));
@@ -47,5 +48,5 @@ const start = async () => {
     console.log(error);
   }
 };
-
+app.use(errorHandler);
 start();

@@ -1,9 +1,17 @@
 const mongoose = require("mongoose");
 const csvSchema = new mongoose.Schema(
   {
-    csvFile: {
+    file: {
       type: String,
-      // required:[true,'csv file is required']
+    },
+
+    name: {
+      type: String,
+    },
+
+    status: {
+      type: String,
+      default: "Waiting",
     },
   },
   { timestamps: true }

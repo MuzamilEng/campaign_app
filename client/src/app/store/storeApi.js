@@ -1,61 +1,56 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-const API_KEY = import.meta.env.VITE_APP_API_KEY;
+const API_KEY = import.meta.env.VITE_REACT_API_URL;
 // console.log(API_KEY);
 //  https://infra.chequelivros.net/bookstores
 
 export const storeApi = createApi({
   reducerPath: "storeApi",
   baseQuery: fetchBaseQuery({ baseUrl: `${API_KEY}` }),
+  tagTypes: ["Post", "User"],
   endpoints: (builder) => ({
-    getAllStore: builder.query({
-      query: () => `/store`,
+    getAdminData: builder.query({
+      query: () => `/getAdminData`,
+      providesTags: ["Post"],
     }),
-    getStoreById: builder.query({
-      query: (id) => `/store/${id}`,
-    }),
-    addBookStore: builder.mutation({
+
+    submitForm: builder.mutation({
       query: (data) => ({
-        url: "/bookstores",
+        url: "/upload",
         method: "POST",
         body: data,
       }),
+      providesTags: ["User"],
     }),
-    updateBookStore: builder.mutation({
+    updateAdminData: builder.mutation({
       query: ({ id, data }) => ({
-        url: `/store/${id}`,
+        url: `/updateAdminData/${id}`,
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: ["Post"],
     }),
-    deleteBookStore: builder.mutation({
+    updateAdminStatus: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/updateStatus/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    }),
+    deleteAdminData: builder.mutation({
       query: (id) => ({
-        url: `/store/${id}`,
+        url: `/deleteAdminData/${id}`,
         method: "DELETE",
-      }),
-    }),
-    signUpUser: builder.mutation({
-      query: (data) => ({
-        url: "/auth/signup",
-        method: "POST",
-        body: data,
-      }),
-    }),
-    loginUser: builder.mutation({
-      query: (data) => ({
-        url: "/auth/login",
-        method: "POST",
-        body: data,
       }),
     }),
   }),
 });
 
 export const {
-  useGetAllStoreQuery,
+  useGetAdminDataQuery,
   useGetStoreByIdQuery,
-  useAddBookStoreMutation,
-  useUpdateBookStoreMutation,
-  useDeleteBookStoreMutation,
-  useSignUpUserMutation,
-  useLoginUserMutation,
+  useSubmitFormMutation,
+  useUpdateAdminDataMutation,
+  useDeleteAdminDataMutation,
+  useUpdateAdminStatusMutation,
 } = storeApi;
