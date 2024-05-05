@@ -9,8 +9,8 @@ export const GlobalStateProvider = ({ children }) => {
   const [menuBar, setMenuBar] = useState(false);
   const [hamburger, setHamburger] = useState(true);
   const [userLoginInfo, setUserLoginInfoState] = useState(null);
-  const [uploadFile, setUploadFile] = useState(false)
-
+  const [uploadFile, setUploadFile] = useState(false);
+  const [csvViewData, setCsvViewData] = useState(null);
   return (
     <GlobalStateContext.Provider
       value={{
@@ -19,7 +19,10 @@ export const GlobalStateProvider = ({ children }) => {
         hamburger,
         setHamburger,
         userLoginInfo,
-        uploadFile, setUploadFile
+        uploadFile,
+        setUploadFile,
+        csvViewData,
+        setCsvViewData,
       }}
     >
       {children}

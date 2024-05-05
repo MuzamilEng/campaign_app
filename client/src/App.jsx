@@ -8,6 +8,7 @@ import ResetPassword from "./app/pages/ResetPassword";
 import Dashboard from "./app/pages/Dashboard";
 import UserTable from "./app/pages/UserTable";
 import AdminTable from "./app/pages/AdminTable";
+import ViewCsv from "./app/pages/ViewCsv";
 function App() {
   const user = localStorage.getItem("token");
 
@@ -22,6 +23,7 @@ function App() {
       <Route path="/resetPassword" element={<ResetPassword />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/adminTable" element={<AdminTable />} />
+      <Route path="/csv" element={<ViewCsv />} />
     </Routes>
   );
 }
