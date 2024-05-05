@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 const Index = () => {
   const [idToDelete, setIdToDelete] = useState(null);
   const apiUrl = "http://localhost:5173" || import.meta.env.VITE_REACT_API_URL;
-  const { isError, isLoading, data } = useGetAdminDataQuery();
+  const { isError, isLoading, data, refetch: refetchStatus } = useGetAdminDataQuery();
   const [deleteAdminData, { isLoading: isDeleting, isError: deleteError }] =
     useDeleteAdminDataMutation();
   const formatDate = (dateString) => {
@@ -50,8 +50,10 @@ const Index = () => {
     try {
       updateAdmin({ id, data: { status } }).unwrap();
       console.log(status);
+      refetchStatus();
     } catch (err) {
       console.log(err.message);
+      
     }
   };
   const handleView = (fileName) => {

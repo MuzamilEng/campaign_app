@@ -7,28 +7,25 @@ import { useGlobalContext } from "../../context/GlobalStateProvider";
 
 const Login = () => {
   const apiUrl = import.meta.env.VITE_REACT_API_URL;
-  const { object, setObject } = useGlobalContext();
   const [data, setData] = useState({ email: "" });
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const handleChange = ({ currentTarget: input }) => {
-    setData({ ...data, [input.name]: input.value });
+  const handleChange = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setObject({ ...object, email: data.email });
+      console.log('try');
       setLoading(true);
       const url = `${apiUrl}/forgot-password`;
-      const res = await axios.post(url, data);
+      const res = await axios.post(url, data?.email);
       setData({ email: "" });
-      //   console.log(res);
       setLoading(false);
       navigate("/resetPassword");
     } catch (error) {
-      console.log(error.response.data.error);
       setLoading(false);
       setError(error.response.data.error);
       toast.error(error.response.data.error);
@@ -42,7 +39,6 @@ const Login = () => {
         <div className={styles.left}>
           <form className={styles.form_container} onSubmit={handleSubmit}>
             <h1>Forget password</h1>
-
             <input
               type="text"
               placeholder="Email"

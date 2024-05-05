@@ -30,6 +30,7 @@ const Index = () => {
     } catch (error) {
       console.error("Error deleting item:", error);
     }
+    refetchUserData()
   };
 
   useEffect(()=> {
