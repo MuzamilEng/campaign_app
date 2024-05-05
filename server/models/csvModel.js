@@ -1,14 +1,10 @@
 const mongoose = require("mongoose");
 const csvSchema = new mongoose.Schema(
   {
-    file: {
-      type: String,
-    },
-
-    name: {
-      type: String,
-    },
-
+    fileName: String,
+    filePath : String,
+    file: String,
+    name: String,
     status: {
       type: String,
       default: "Waiting",

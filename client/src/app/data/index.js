@@ -1,14 +1,19 @@
-export const dashboardForm = [
+import React from "react";
+import { Icon } from "@iconify/react";
+
+
+export const sidebar = [
   {
-    label: "Name",
-    name: "name",
-    type: "text",
-    placeholder: "Enter your name",
-    rules: {
-      required: {
-        value: true,
-        message: "Name is required",
-      },
-    },
+    title: "Dashboard",
+    path: "/dashboard",
+    // icon: <Icon icon="ic:outline-dashboard" />
   },
-];
+  {
+    title: "Pending Requests",
+    path: "/requests",
+  },
+  {
+    title: "Approved Requests",
+    path: "/approved",
+  },
+];  

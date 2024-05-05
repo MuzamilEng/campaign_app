@@ -9,6 +9,7 @@ export const GlobalStateProvider = ({ children }) => {
   const [menuBar, setMenuBar] = useState(false);
   const [hamburger, setHamburger] = useState(true);
   const [userLoginInfo, setUserLoginInfoState] = useState(null);
+  const [uploadFile, setUploadFile] = useState(false)
 
   return (
     <GlobalStateContext.Provider
@@ -18,6 +19,7 @@ export const GlobalStateProvider = ({ children }) => {
         hamburger,
         setHamburger,
         userLoginInfo,
+        uploadFile, setUploadFile
       }}
     >
       {children}

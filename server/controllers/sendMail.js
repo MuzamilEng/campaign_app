@@ -3,13 +3,13 @@ const nodemailer = require("nodemailer");
 module.exports = async (email, subject, text) => {
   try {
     const transporter = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
+      host: 'smtp.ethereal.email',
       port: 587,
       auth: {
-        user: "herta.dibbert@ethereal.email",
-        pass: "zH7tCy8KzJZs9eYZuT",
-      },
-    });
+          user: 'gianni.grady@ethereal.email',
+          pass: 'BC98FVrgw3cZjuM8sk'
+      }
+  });
     await transporter.sendMail({
       from: process.env.USER,
       to: email,

@@ -14,3 +14,8 @@ code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
 		monospace;
 }
+
+
+.form_bg{
+	background-color: rgba(60, 56, 255, .05);
+}

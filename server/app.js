@@ -21,6 +21,8 @@ app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 app.use(express.static("public"));
+app.use("/public", express.static(path.join(__dirname, "public")));
+
 app.use(express.json({ limit: "50mb", extended: true }));
 app.use(
   express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 })

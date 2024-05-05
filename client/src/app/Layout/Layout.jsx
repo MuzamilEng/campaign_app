@@ -1,18 +1,18 @@
 import React from 'react';
+import Header from '../components/Header';
+import Sidebar from '../components/Sidebar';
 // import Sidebar from '../components/Sidebar/Livraria/Sidebar';
-// import Topbar from '../components/Common/Topbar';
 
 const Layout = ({ children }) => {
   return (
-    <main className='md:w-full md:flex md:relative md:bg-[#f5f5f5] md:h-screen md:overflow-x-hidden'>
-      <section className='flex flex-col  fixed '>
-        {/* <Sidebar /> */}
-      </section>
-      <section className='md:w-full md:ml-[20vw] hidden md:block'>
-        {/* <Topbar title={'Painel'} date={'8, March 2024'} /> */}
+    <main className='w-full'>
+      <Header />
+     <article className='flex'>
+      {/* <aside className='w-full max-w-[20vw]'><Sidebar /></aside> */}
+     <section className='w-full'>
         {children}
       </section>
-
+     </article>
     </main>
   );
 };

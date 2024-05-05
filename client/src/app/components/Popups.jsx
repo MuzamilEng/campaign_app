@@ -2,17 +2,11 @@ import React from "react";
 import { useUpdateAdminDataMutation } from "../store/storeApi";
 import { Toaster, toast } from "sonner";
 import { Controller, useForm } from "react-hook-form";
-import { dashboardForm } from "../data";
+// import { dashboardForm } from "../data";
 
 export const FormPopup = ({ setPopup, id }) => {
-  const {
-    reset,
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-  const [updateAdminData, { isLoading, isError, isSuccess }] =
-    useUpdateAdminDataMutation();
+  const {  reset, control, handleSubmit, formState: { errors }, } = useForm();
+  const [updateAdminData, { isLoading, isError, isSuccess }] = useUpdateAdminDataMutation();
 
   const onSubmit = async (data) => {
     try {
@@ -47,38 +41,6 @@ export const FormPopup = ({ setPopup, id }) => {
           className="bg-[white]/40 p-[3vw] rounded-xl w-[30vw] "
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className="mt-[2vw]">
-            {dashboardForm.map((elem, index) => (
-              <div key={index} className="mb-4">
-                <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                  htmlFor={elem.name}
-                >
-                  {elem.label}
-                </label>
-                <Controller
-                  name={elem.name}
-                  control={control}
-                  defaultValue={elem.value}
-                  rules={elem.rules}
-                  render={({ field }) => (
-                    <input
-                      {...field}
-                      id={elem.name}
-                      type={elem.type}
-                      className="mb-2 w-full px-4 py-2 border rounded shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder={elem.placeholder}
-                    />
-                  )}
-                />
-                {errors[elem.name] && (
-                  <p className="text-red-500 text-xs italic">
-                    {errors[elem.name].message}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
           <button className="w-full p-[0.5vw] text-white text-[1vw] hover:bg-blue-600 bg-blue-500 rounded-md mt-[2vw]">
             {isLoading ? <p>Loading....</p> : <p>update</p>}
           </button>

@@ -60,7 +60,7 @@ const signUp = async (req, res) => {
           userId: savedUser._id,
           token: crypto.randomBytes(32).toString("hex"),
         }).save();
-        const url = `${process.env.BASE_URL}users${savedUser.id}/verify/${token.token}`;
+        const url = `${process.env.BASE_URL}/users/${savedUser.id}/verify/${token.token}`;
         await sendMail(savedUser.email, "Verify Email", url);
       }
       // console.log(savedUser.email, "email");
@@ -87,9 +87,13 @@ const login = (req, res, next) => {
       if (err) {
         return res.status(500).json({ error: "Internal Server Error" });
       }
+      console.log(user, 'user');
 
       if (!user) {
-        return res.status(401).json({ error: info.message });
+        return res.status(401).json({ error: info?.message });
+      }
+      if(user?.verified == false){
+        return res.status(401).json({ error: "Please verify your email" });
       }
 
       try {
