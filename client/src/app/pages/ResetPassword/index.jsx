@@ -1,33 +1,39 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
 import { Toaster, toast } from "sonner";
 import { useGlobalContext } from "../../context/GlobalStateProvider";
 
 const Login = () => {
   const apiUrl = import.meta.env.VITE_REACT_API_URL;
-  const { object, setObject } = useGlobalContext();
+  const { forgetEmail, setForgetEmail } = useGlobalContext();
+  const navigate = useNavigate();
   //   const [data, setData] = useState({ email: "" });
-  const [data, setData] = useState({ email: "", otp: "", newPassword: "" });
+  const [data, setData] = useState({ otp: "", newPassword: "" });
   const [error, setError] = useState("");
   const [otpState, setOtpState] = useState(false);
   const [loading, setLoading] = useState(false);
   const [successFulAlert, setSuccessFulAlert] = useState(false);
-  const handleChange = ({ currentTarget: input }) => {
-    setData({ ...data, [input.name]: input.value });
+  const handleChange = (event) => {
+    // setData({ ...data, [event.target.name]: event.target.value });
+    setForgetEmail({ ...forgetEmail, [event.target.name]: event.target.value });
+    console.log(data);
   };
 
   const handleSubmit = async (e) => {
+    console.log("front end call");
     e.preventDefault();
     try {
       setLoading(true);
-      setObject({ ...object, newPassword: data.newPassword, otp: data.otp });
+
       const url = `${apiUrl}/reset-password`;
-      const res = await axios.post(url, object);
-      setData({ email: "", otp: "", newPassword: "" });
+      const res = await axios.post(url, forgetEmail);
+      setData({ otp: "", newPassword: "" });
       setLoading(false);
       setSuccessFulAlert(true);
+      setForgetEmail({ ...forgetEmail, otp: "", newPassword: "" });
+      navigate("/login");
     } catch (error) {
       console.log(error);
       //   setError(error.response.data.error);
@@ -62,7 +68,7 @@ const Login = () => {
               placeholder="OTP"
               name="otp"
               onChange={handleChange}
-              value={data.otp}
+              value={forgetEmail.otp}
               required
               className={styles.input}
             />
@@ -72,7 +78,7 @@ const Login = () => {
               placeholder="New password"
               name="newPassword"
               onChange={handleChange}
-              value={data.newPassword}
+              value={forgetEmail.newPassword}
               required
               className={styles.input}
             />

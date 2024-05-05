@@ -11,6 +11,11 @@ export const GlobalStateProvider = ({ children }) => {
   const [userLoginInfo, setUserLoginInfoState] = useState(null);
   const [uploadFile, setUploadFile] = useState(false);
   const [csvViewData, setCsvViewData] = useState(null);
+  const [forgetEmail, setForgetEmail] = useState({
+    email:'',
+    newPassword:'',
+    otp:''
+  })
   return (
     <GlobalStateContext.Provider
       value={{
@@ -23,6 +28,7 @@ export const GlobalStateProvider = ({ children }) => {
         setUploadFile,
         csvViewData,
         setCsvViewData,
+        forgetEmail, setForgetEmail
       }}
     >
       {children}

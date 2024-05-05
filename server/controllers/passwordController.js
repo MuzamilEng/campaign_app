@@ -48,7 +48,7 @@ const forgotPassword = async (req, res) => {
 const resetPassword = async (req, res) => {
   try {
     const { email, otp, newPassword } = req.body;
-
+    console.log("call reset");
     // Check if the user exists
     const user = await User.findOne({ email });
     console.log(user);

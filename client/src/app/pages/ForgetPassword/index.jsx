@@ -11,6 +11,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { forgetEmail, setForgetEmail } = useGlobalContext();
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
@@ -18,10 +19,11 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log('try');
       setLoading(true);
       const url = `${apiUrl}/forgot-password`;
-      const res = await axios.post(url, data?.email);
+      setForgetEmail({ ...forgetEmail, email: data.email });
+      // Send the email as part of the request body
+      const res = await axios.post(url, { email: data.email });
       setData({ email: "" });
       setLoading(false);
       navigate("/resetPassword");
