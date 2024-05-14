@@ -22,7 +22,7 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	background-color: rgb(31 41 55);
+	background-color: #525A6F;
 	border-top-left-radius: 10px;
 	border-bottom-left-radius: 10px;
 }
@@ -78,7 +78,7 @@
 	text-align: center;
 }
 .sucecc_msg{
-	background-color: rgb(31 41 55);
+	background-color: #525A6F;
     color: white;
 }
 .white_btn,
@@ -95,7 +95,7 @@
 }
 
 .green_btn {
-	background-color: rgb(31 41 55);
+	background-color: #525A6F;
 	color: white;
 	margin: 10px;
 }

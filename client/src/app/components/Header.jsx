@@ -2,8 +2,10 @@ import React from 'react'
 
 const Header = () => {
   return (
-    <header className='w-full p-[1.5vw] bg-gray-800 text-white' >
-        <h1 className='text-[1.2vw] font-semibold italic'>TheMailCampaign.</h1>
+    <header className='w-full p-[0.4vw] bg-[#525A6F] text-white' >
+        <figure className='w-full max-w-[7vw]'>
+          <img src="/img/logo1.png" alt="wahix india" className='w-full' />
+        </figure>
     </header>
   )
 }

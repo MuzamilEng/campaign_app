@@ -1,12 +1,12 @@
 import React from "react";
-import { useUpdateAdminDataMutation } from "../store/storeApi";
+import { useUpdateRecordMutation } from "../store/storeApi";
 import { Toaster, toast } from "sonner";
 import { Controller, useForm } from "react-hook-form";
 // import { dashboardForm } from "../data";
 
 export const FormPopup = ({ setPopup, id }) => {
   const {  reset, control, handleSubmit, formState: { errors }, } = useForm();
-  const [updateAdminData, { isLoading, isError, isSuccess }] = useUpdateAdminDataMutation();
+  const [updateAdminData, { isLoading, isError, isSuccess }] = useUpdateRecordMutation();
 
   const onSubmit = async (data) => {
     try {

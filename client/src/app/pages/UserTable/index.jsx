@@ -1,20 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { useDeleteAdminDataMutation, useGetAdminDataQuery } from "../../store/storeApi";
+import { useDeleteAdminDataMutation, useGetAllRecordsQuery } from "../../store/storeApi";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { FormPopup } from "../../components/Popups";
 import { useGlobalContext } from "../../context/GlobalStateProvider";
 import Loading from "../../components/Loading";
+import { TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Paper, TablePagination } from '@mui/material';
+import DeleteModal from "../../components/DeleteModal";
+import UpdateModal from "../../components/UpdateModal";
 
 const Index = () => {
   const [popup, setPopup] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
-  const {uploadFile} = useGlobalContext()
-  const { isError, isLoading, data, refetch: refetchUserData } = useGetAdminDataQuery();
+  const { uploadFile } = useGlobalContext();
+  const { isError, isLoading, data, refetch: refetchUserData } = useGetAllRecordsQuery();
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [page, setPage] = useState(0);
+  const tableHeads = ['Check', 'Name', 'Status', 'Created at', 'Action']
+
   const formatDate = (dateString) => {
     const options = { month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit" };
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', options);
   };
+
   const [deleteAdminData, { isLoading: isDeleting, isError: deleteError }] = useDeleteAdminDataMutation();
 
   const showPopup = (id) => {
@@ -25,81 +33,86 @@ const Index = () => {
   const handleDelete = async (id) => {
     try {
       await deleteAdminData(id);
-      // Optionally, you can refetch data here to update the UI
       console.log("Item deleted successfully!");
     } catch (error) {
       console.error("Error deleting item:", error);
     }
-    refetchUserData()
+    refetchUserData();
   };
 
-  useEffect(()=> {
-    refetchUserData()
-  }, [uploadFile])
+  useEffect(() => {
+    refetchUserData();
+  }, [uploadFile]);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <>
       <div className="flex justify-center items-center -mt-[1vw] w-full">
         {isError && <div>Error loading data</div>}
-        {isLoading ? (
-          <div className="w-full h-[10vw]"><Loading /></div>
-        ) : (
-          <table className="w-full max-w-[70vw]  table-auto border-collapse border border-gray-300 shadow rounded mt-[2vw]">
-            <thead className="bg-gray-200">
-              <tr>
-                <th className="border border-gray-300 px-4 py-2">Check</th>
-                <th className="border border-gray-300 px-4 py-2">Name</th>
-                <th className="border border-gray-300 px-4 py-2">Status</th>
-                <th className="border border-gray-300 px-4 py-2">Created at</th>
-
-                <th className="border border-gray-300 px-4 py-2">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data?.data.map((item, index) => (
-                <tr
+        <TableContainer component={Paper} className="w-full max-w-[70vw] shadow rounded mt-[2vw]">
+          <Table>
+            <TableHead className="">
+            <TableRow>
+						{tableHeads?.map((item, index)=> (
+						<TableCell key={index} style={{ fontWeight: 'bold' }}
+						className='text-md px-6 py-2 border-r border-solid w-1/6 text-start whitespace-nowrap hover:bg-[#d4f1ff]'>
+							{item}
+						</TableCell>
+						))}
+					</TableRow>
+            </TableHead>
+            <TableBody>
+              {data?.data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
+                <TableRow
                   key={index}
-                  className={`${
-                    index % 2 === 0 ? "bg-gray-100" : "bg-white"
-                  } hover:bg-gray-200`}
+                  className={'hover:bg-[#f0faff]'}
                 >
-                  <td className="border border-gray-300 px-4 py-2">
+                  <TableCell className='text-md p-[0.5vw] hover:underline hover:font-medium border-r border-solid hover:cursor-pointer'>
                     <input type="checkbox" />
-                  </td>
-                  <td className="border border-gray-300 items-center text-center px-4 py-2">
+                  </TableCell>
+                  <TableCell className='text-md p-[0.5vw] hover:underline hover:font-medium border-r border-solid hover:cursor-pointer'>
                     {item.name}
-                  </td>
-
-                  <td className={`border border-gray-300 items-center text-center px-4 py-2 ${item?.status === 'Awaiting' ? 'text-yellow-600' : 'text-green-600'}`}>
+                  </TableCell>
+                  <TableCell className={`items-center text-md p-[0.5vw] hover:underline hover:font-medium border-r border-solid hover:cursor-pointer text-center ${item?.status === 'Awaiting' ? 'text-yellow-600' : 'text-green-600'}`}>
                     {item.status}
-                  </td>
-                  <td className="border border-gray-300 items-center text-center px-4 py-2">
-                  {formatDate(item.createdAt)}
-                  </td>
-                  <td className="border border-gray-300 p-[0.7vw]">
+                  </TableCell>
+                  <TableCell className='text-md p-[0.5vw] hover:underline hover:font-medium border-r border-solid hover:cursor-pointer'>
+                    {formatDate(item.createdAt)}
+                  </TableCell>
+                  <TableCell className='text-md p-[0.5vw] hover:underline hover:font-medium border-r border-solid hover:cursor-pointer'>
                     <div className="flex gap-2 justify-center">
-                      <button
-                        className="bg-blue-700 hover:bg-blue-800 text-[1vw] text-white w-[2vw] h-[2vw] flex items-center justify-center rounded-md transition duration-300 ease-in-out transform hover:scale-105 "
-                        onClick={() => showPopup(item._id)}
-                      >
-                        <Icon icon="bx:edit" />
-                      </button>
-                      <button
-                        className="bg-red-700 hover:bg-red-800 text-white text-[1vw] w-[2vw] h-[2vw] flex items-center justify-center rounded-md transition duration-300 ease-in-out transform hover:scale-105"
-                        onClick={() => handleDelete(item._id)}
-                        disabled={isDeleting}
-                      >
-                        <Icon icon="material-symbols:delete-outline" />
-                      </button>
+                     <UpdateModal id={item?._id} />
+                      <DeleteModal id={item?._id} />
                     </div>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        )}
+            </TableBody>
+          </Table>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={data?.data.length ?? 0}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </TableContainer>
       </div>
-      {popup ? <FormPopup setPopup={setPopup} id={idToDelete} /> : null}
+      {/* {popup && <FormPopup setPopup={setPopup} id={idToDelete} />} */}
     </>
   );
 };

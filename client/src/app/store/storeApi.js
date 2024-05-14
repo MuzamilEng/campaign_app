@@ -8,11 +8,17 @@ export const storeApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: `${API_KEY}` }),
   tagTypes: ["Post", "User"],
   endpoints: (builder) => ({
-    getAdminData: builder.query({
+    getAllRecords: builder.query({
       query: () => `/getAdminData`,
       providesTags: ["Post"],
     }),
-
+    deleteRecodById: builder.mutation({
+      query: (id) => ({
+        url: `/deleteRecord/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Post"],
+    }),
     submitForm: builder.mutation({
       query: (data) => ({
         url: "/upload",
@@ -21,9 +27,9 @@ export const storeApi = createApi({
       }),
       providesTags: ["User"],
     }),
-    updateAdminData: builder.mutation({
+    updateRecord: builder.mutation({
       query: ({ id, data }) => ({
-        url: `/updateAdminData/${id}`,
+        url: `/updateRecord/${id}`,
         method: "PUT",
         body: data,
       }),
@@ -47,10 +53,10 @@ export const storeApi = createApi({
 });
 
 export const {
-  useGetAdminDataQuery,
-  useGetStoreByIdQuery,
+  useGetAllRecordsQuery,
+  useDeleteRecodByIdMutation,
   useSubmitFormMutation,
-  useUpdateAdminDataMutation,
+  useUpdateRecordMutation,
   useDeleteAdminDataMutation,
   useUpdateAdminStatusMutation,
 } = storeApi;

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   useDeleteAdminDataMutation,
-  useGetAdminDataQuery,
-  useUpdateAdminDataMutation,
+  useGetAllRecordsQuery,
   useUpdateAdminStatusMutation,
 } from "../../store/storeApi";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -17,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 const Index = () => {
   const [idToDelete, setIdToDelete] = useState(null);
   const apiUrl = "http://localhost:5173" || import.meta.env.VITE_REACT_API_URL;
-  const { isError, isLoading, data, refetch: refetchStatus } = useGetAdminDataQuery();
+  const { isError, isLoading, data, refetch: refetchStatus } = useGetAllRecordsQuery();
   const [deleteAdminData, { isLoading: isDeleting, isError: deleteError }] =
     useDeleteAdminDataMutation();
   const formatDate = (dateString) => {

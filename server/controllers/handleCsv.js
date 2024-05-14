@@ -102,15 +102,6 @@ exports.getAdminData = async (req, res, next) => {
 exports.updateAdminData = async (req, res, next) => {
   try {
     const { name, date, time } = req.body;
-
-    // Validation: Check if required fields are present
-    // if (!name || !date || !time) {
-    //   return res
-    //     .status(400)
-    //     .json({ success: false, message: "Name, date, and time are required" });
-    // }
-
-    // Update CSV document by ID
     const csv = await CSV.findByIdAndUpdate(
       req.params.id,
       { name, date, time },
@@ -132,7 +123,69 @@ exports.updateAdminData = async (req, res, next) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+
+
+
+module.exports.updateRecord = [
+  async function (req, res) {
+    try {
+      const { id } = req.params;
+      console.log(id , "id here");
+
+      // Find the existing CSV file in the database
+      let csvFile = await CSV.findById({ _id: id });
+      if (!csvFile) {
+        return res.status(404).send('CSV file not found');
+      }
+
+      // Delete the existing file from the filesystem
+      fs.unlink(csvFile.filePath, (err) => {
+        if (err) {
+          console.error('Error deleting the file:', err);
+        }
+      });
+
+      // Upload and parse the new file
+      const newFilePath = req.file.path; // Path to the new uploaded file
+      const newFileName = req.file.originalname; // Original name of the new file
+
+      const results = [];
+      const header = [];
+
+      fs.createReadStream(newFilePath)
+        .pipe(csvParser())
+        .on('headers', (headers) => {
+          headers.map((head) => {
+            header.push(head);
+          });
+        })
+        .on('data', (data) => results.push(data))
+        .on('end', async () => {
+          // Update the CSV file document in the database
+          csvFile.fileName = newFileName;
+          csvFile.filePath = newFilePath;
+          csvFile.header = header;
+          csvFile.data = results;
+          await csvFile.save();
+
+          // Render the updated data
+          res.render('file_viewer', {
+            title: 'File Viewer',
+            fileName: newFileName,
+            head: header,
+            data: results,
+            length: results.length
+          });
+        });
+    } catch (error) {
+      console.error('Error in fileController/update', error);
+      res.status(500).send('Internal server error');
+    }
+  }
+];
+
 exports.deleteAdminData = async (req, res, next) => {
+  console.log(req.params.id);
   try {
     const csv = await CSV.findByIdAndDelete(req.params.id);
     res.status(200).json({
