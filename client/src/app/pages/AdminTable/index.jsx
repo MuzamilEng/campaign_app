@@ -13,10 +13,16 @@ import useFetch from "../../../customHooks/useFetch";
 // import { parse } from "papaparse";
 import Papa from "papaparse";
 import { useNavigate } from "react-router-dom";
+import AdminTable from "../../components/AdminTable";
 const Index = () => {
   const [idToDelete, setIdToDelete] = useState(null);
   const apiUrl = "http://localhost:5173" || import.meta.env.VITE_REACT_API_URL;
-  const { isError, isLoading, data, refetch: refetchStatus } = useGetAllRecordsQuery();
+  const {
+    isError,
+    isLoading,
+    data,
+    refetch: refetchStatus,
+  } = useGetAllRecordsQuery();
   const [deleteAdminData, { isLoading: isDeleting, isError: deleteError }] =
     useDeleteAdminDataMutation();
   const formatDate = (dateString) => {
@@ -52,7 +58,6 @@ const Index = () => {
       refetchStatus();
     } catch (err) {
       console.log(err.message);
-      
     }
   };
   const handleView = (fileName) => {
@@ -61,8 +66,10 @@ const Index = () => {
   const navigate = useNavigate();
   const [csvData, setCsvData] = useState([]);
   const { fetchCsvData } = useFetch();
-  const { csvViewData, setCsvViewData } = useGlobalContext();
+  let { csvViewData, setCsvViewData, globalAdminData, setGlobalAdminData } =
+    useGlobalContext();
   const [viewCsvTable, setViewCsvTable] = useState(false);
+
   if (isUpdateError) {
     toast.error("Something wrong");
   }
@@ -90,6 +97,9 @@ const Index = () => {
 
     return newPath;
   }
+  useEffect(() => {
+    setGlobalAdminData(data?.data);
+  }, [data]);
   return (
     <>
       <AdminLayout>
@@ -102,70 +112,15 @@ const Index = () => {
           {isLoading ? (
             <div>Loading...</div>
           ) : (
-            <table className="w-full table-auto border-collapse border border-gray-300 shadow rounded mt-[2vw]">
-              <thead className="bg-gray-200">
-                <tr>
-                  <th className="border border-gray-300 px-4 py-2">Check</th>
-                  <th className="border border-gray-300 px-4 py-2">Name</th>
-                  <th className="border border-gray-300 px-4 py-2">
-                    Created at
-                  </th>
-                  <th className="border border-gray-300 px-4 py-2">Status</th>
-                  <th className="border border-gray-300 px-4 py-2">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data?.data.map((item, index) => (
-                  <tr
-                    key={index}
-                    className={`${
-                      index % 2 === 0 ? "bg-gray-100" : "bg-white"
-                    } hover:bg-gray-200`}
-                  >
-                    <td className="border border-gray-300 px-4 py-2">
-                      <input type="checkbox" />
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {item.name}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {formatDate(item.createdAt)}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {item.status}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-[0.5vw]">
-                      <div className="flex gap-8 justify-center">
-                        <button
-                          className="bg-red-500 hover:bg-red-700 text-white px-2 py-1 rounded-md transition duration-300 ease-in-out transform hover:scale-105"
-                          onClick={() => updateStatus(item._id, "Reject")}
-                          disabled={isDeleting}
-                        >
-                          {isUpdating ? "reject..." : "Reject"}
-                        </button>
-                        <button
-                          className="bg-green-500 hover:bg-green-700 text-white px-2 py-1 rounded-md transition duration-300 ease-in-out transform hover:scale-105"
-                          onClick={() => updateStatus(item._id, "Approved")}
-                          disabled={isDeleting}
-                        >
-                          {isDeleting ? "approved..." : "Approved"}
-                        </button>
-                        <button
-                          className="bg-blue-500 hover:bg-blue-700 text-white px-2 py-1 rounded-md transition duration-300 ease-in-out transform hover:scale-105"
-                          onClick={() => {
-                            const newPath = removeInitialPath(item.filePath);
-                            handleDownload(`/temp/${newPath}`);
-                            console.log(newPath);
-                          }}
-                        >
-                          view
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <AdminTable
+              globalAdminData={globalAdminData}
+              updateStatus={updateStatus}
+              handleDownload={handleDownload}
+              formatDate={formatDate}
+              removeInitialPath={removeInitialPath}
+              isUpdating={isUpdating}
+              isDeleting={isDeleting}
+            />
           )}
         </div>
       </AdminLayout>

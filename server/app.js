@@ -50,5 +50,12 @@ const start = async () => {
     console.log(error);
   }
 };
+
+
+
+// Example usage:
+
+
+
 app.use(errorHandler);
 start();

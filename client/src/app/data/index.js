@@ -1,7 +1,6 @@
 import React from "react";
 import { Icon } from "@iconify/react";
 
-
 export const sidebar = [
   {
     title: "Dashboard",
@@ -16,4 +15,12 @@ export const sidebar = [
     title: "Approved Requests",
     path: "/approved",
   },
-];  
+  {
+    title: "Reject Requests",
+    path: "/approved",
+  },
+  {
+    title: "All",
+    path: "/approved",
+  },
+];

@@ -1,4 +1,4 @@
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, Link, useNavigate } from "react-router-dom";
 import Main from "./app/pages/Main";
 import Signup from "./app/pages/Singup";
 import Login from "./app/pages/Login";
@@ -9,8 +9,15 @@ import Dashboard from "./app/pages/Dashboard";
 import UserTable from "./app/pages/UserTable";
 import AdminTable from "./app/pages/AdminTable";
 import ViewCsv from "./app/pages/ViewCsv";
+import { useEffect, useState } from "react";
 function App() {
+  const [admin, setAdmin] = useState(true);
+  const navigate = useNavigate();
   const user = localStorage.getItem("token");
+
+  if (admin) {
+    navigate("/adminTable");
+  }
 
   return (
     <Routes>
